@@ -118,6 +118,10 @@ def build_app():
     async def _process(request: Request):
         try:
             payload = await request.json()
+            if payload:
+                text = payload.get("message", {}).get("text") or payload.get("edited_message", {}).get("text")
+                if text:
+                    logutil.info(f"Webhook received: {text}")
             update = Update.de_json(payload)
             if update:
                 bot.process_new_updates([update])

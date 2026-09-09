@@ -724,7 +724,7 @@ def register() -> None:
     except Exception as err:
         print(f"[user_flow] set_my_commands failed: {err}")
 
-    @bot.message_handler(commands=["start"], chat_types=["private"])
+    @bot.message_handler(commands=["start"])
     def on_start(message: Message) -> None:
         chat_id = int(message.chat.id)
         with _start_inflight_lock:
@@ -765,7 +765,7 @@ def register() -> None:
             with _start_inflight_lock:
                 _start_inflight.discard(chat_id)
 
-    @bot.message_handler(commands=["menu"], chat_types=["private"])
+    @bot.message_handler(commands=["menu"])
     def on_menu(message: Message) -> None:
         chat_id = int(message.chat.id)
         try:
@@ -775,7 +775,7 @@ def register() -> None:
         except Exception as err:
             print(f"[user_flow] /menu failed: {err}")
 
-    @bot.message_handler(commands=["cancel"], chat_types=["private"])
+    @bot.message_handler(commands=["cancel"])
     def on_cancel(message: Message) -> None:
         clear_session(message.from_user.id)
         clear_ui(message.chat.id, message.message_id)
