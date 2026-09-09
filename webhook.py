@@ -117,8 +117,15 @@ def build_app():
 
     async def _process(request: Request):
         try:
-            payload = await request.json()
-            if payload:
+            raw = await request.body()
+            if not raw:
+                return JSONResponse(content={"ok": True}, status_code=200)
+            try:
+                payload = __import__("json").loads(raw)
+            except Exception:
+                return JSONResponse(content={"ok": True}, status_code=200)
+
+            if isinstance(payload, dict):
                 text = payload.get("message", {}).get("text") or payload.get("edited_message", {}).get("text")
                 if text:
                     logutil.info(f"Webhook received: {text}")
